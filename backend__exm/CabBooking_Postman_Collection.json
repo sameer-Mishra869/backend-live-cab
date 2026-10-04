@@ -1,0 +1,205 @@
+{
+  "info": {
+    "name": "Cab Booking API",
+    "description": "Multi-City Cab Fare Estimation and Booking System — Exam Project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000/api" },
+    { "key": "token", "value": "PASTE_YOUR_JWT_TOKEN_HERE" }
+  ],
+  "item": [
+    {
+      "name": "🔐 AUTH",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sameer Khan\",\n  \"email\": \"sameer@test.com\",\n  \"password\": \"123456\",\n  \"phone\": \"9876543210\",\n  \"role\": \"customer\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@test.com\",\n  \"password\": \"admin123\",\n  \"phone\": \"9999999999\",\n  \"role\": \"admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sameer@test.com\",\n  \"password\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏙️ CITIES (Admin Required for Write)",
+      "item": [
+        {
+          "name": "Get All Cities",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/cities"
+          }
+        },
+        {
+          "name": "Add City (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/cities",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mumbai\",\n  \"baseRate\": 50,\n  \"perKmRate\": 12\n}"
+            }
+          }
+        },
+        {
+          "name": "Update City Rates (Admin Only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/cities/CITY_ID_HERE/rates",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"baseRate\": 60,\n  \"perKmRate\": 15\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👨‍✈️ DRIVERS",
+      "item": [
+        {
+          "name": "Register Driver (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/drivers/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Raju Driver\",\n  \"email\": \"raju@driver.com\",\n  \"password\": \"raju123\",\n  \"phone\": \"9876543210\",\n  \"vehicleNumber\": \"MH12AB1234\",\n  \"vehicleType\": \"sedan\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Drivers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/drivers"
+          }
+        },
+        {
+          "name": "Get Available Drivers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/drivers/available"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 FARE ESTIMATE",
+      "item": [
+        {
+          "name": "Estimate Fare",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/fare/estimate",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": \"CITY_ID_HERE\",\n  \"distanceKm\": 10\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚗 BOOKINGS",
+      "item": [
+        {
+          "name": "Create Booking (with Conflict Check)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/bookings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cityId\": \"CITY_ID_HERE\",\n  \"driverId\": \"DRIVER_ID_HERE\",\n  \"pickupLocation\": \"Andheri Station\",\n  \"dropLocation\": \"Bandra Kurla Complex\",\n  \"distanceKm\": 10,\n  \"rideDate\": \"2024-12-25\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/bookings/my"
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/bookings/BOOKING_ID_HERE/cancel"
+          }
+        },
+        {
+          "name": "Get All Bookings (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/bookings"
+          }
+        }
+      ]
+    }
+  ]
+}
